@@ -1,0 +1,678 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ESCAPE ROOM: Análise Combinatória</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght=700&family=Special+Elite&family=Creepster&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary: #FF007F; 
+            --bg-dark: #000000;
+            --container-bg: rgba(10, 10, 10, 0.95);
+            --border-style: solid;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: white;
+            font-family: 'Special Elite', cursive;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            overflow-x: hidden;
+            transition: all 1s ease;
+            position: relative;
+        }
+
+        .damage-flash {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(139, 0, 0, 0.7);
+            z-index: 99;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.1s ease;
+        }
+
+        .blood-screen {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: radial-gradient(circle, transparent 5%, rgba(100, 0, 0, 0.98) 60%), 
+                        linear-gradient(to bottom, rgba(139,0,0,0.9) 0%, transparent 50%);
+            z-index: 50;
+            pointer-events: none;
+            animation: bloodDrip 1.5s forwards;
+        }
+
+        @keyframes bloodDrip {
+            0% { opacity: 0; transform: scale(1.2); }
+            100% { opacity: 1; transform: scale(1); }
+        }
+
+        .horror-creature {
+            position: fixed;
+            font-size: 8rem; 
+            user-select: none;
+            z-index: 1;
+            transition: transform 1s ease, opacity 1s ease, filter 1s ease;
+        }
+
+        #creature-left {
+            left: 4%; top: 35%;
+            filter: drop-shadow(0 0 30px var(--primary)) contrast(2) brightness(0.6) hue-rotate(45deg);
+            animation: glitchSpecter 3.5s infinite ease-in-out;
+        }
+
+        #creature-right {
+            right: 4%; bottom: 15%;
+            filter: drop-shadow(0 0 30px var(--primary)) grayscale(1) invert(1) brightness(0.7);
+            animation: twitchEntity 2.5s infinite linear;
+        }
+
+        #creature-top-left {
+            left: 6%; top: 5%; font-size: 6rem;
+            filter: drop-shadow(0 0 25px var(--primary)) brightness(0.4) saturate(0.5);
+            animation: crawlSpider 4s infinite alternate ease-in-out;
+        }
+
+        #creature-top-right {
+            right: 6%; top: 8%; font-size: 6.5rem;
+            filter: drop-shadow(0 0 25px var(--primary)) invert(0.3) contrast(1.5);
+            animation: dashBat 3s infinite ease-in-out;
+        }
+
+        @keyframes glitchSpecter {
+            0%, 100% { transform: translateY(0) rotate(-8deg); opacity: 0.3; filter: blur(2px) drop-shadow(0 0 30px var(--primary)); }
+            45% { transform: translateY(-15px) rotate(3deg); opacity: 0.75; filter: blur(0px) drop-shadow(0 0 40px var(--primary)); }
+            50% { transform: translateY(-12px) skewX(-15deg); opacity: 0.9; }
+            55% { transform: translateY(-15px) rotate(-3deg); opacity: 0.75; }
+        }
+
+        @keyframes twitchEntity {
+            0%, 100% { transform: translateX(0); opacity: 0.3; }
+            20% { transform: translateX(-8px) translateY(4px); opacity: 0.6; }
+            22% { transform: translateX(12px) translateY(-6px) rotate(5deg); opacity: 0.8; }
+            24% { transform: translateX(0); opacity: 0.5; }
+            70% { transform: translateX(4px); opacity: 0.4; }
+            72% { transform: skewY(10deg); opacity: 0.85; }
+            74% { transform: translateX(0); opacity: 0.4; }
+        }
+
+        @keyframes crawlSpider {
+            0% { transform: translateY(0) scaleX(1); opacity: 0.2; }
+            50% { transform: translateY(20px) scaleX(1.1); opacity: 0.5; }
+            100% { transform: translateY(5px) translateX(10px) scaleX(0.9); opacity: 0.3; }
+        }
+
+        @keyframes dashBat {
+            0%, 100% { transform: scale(1) rotate(0deg); opacity: 0.2; }
+            30% { transform: scale(1.2) rotate(-15deg) translate(-10px, 10px); opacity: 0.6; }
+            40% { transform: scale(0.8) rotate(20deg); opacity: 0.4; }
+        }
+
+        .background-eyes {
+            position: fixed;
+            top: 12%; right: 22%; font-size: 3.5rem; opacity: 0.15;
+            filter: drop-shadow(0 0 15px #ff0000) saturate(2);
+            animation: pulseEyes 1.5s infinite alternate ease-in-out;
+            z-index: 0;
+        }
+
+        @keyframes pulseEyes {
+            0% { opacity: 0.05; transform: scale(0.9); }
+            100% { opacity: 0.4; transform: scale(1.1); }
+        }
+
+        .game-container {
+            width: 90%;
+            max-width: 600px;
+            background: var(--container-bg);
+            border: 5px var(--border-style) var(--primary);
+            padding: 40px;
+            box-shadow: 0 0 60px var(--primary);
+            text-align: center;
+            position: relative;
+            z-index: 5;
+            transition: all 1s ease;
+            margin-bottom: 20px;
+        }
+
+        h1 {
+            font-family: 'Creepster', cursive;
+            color: var(--primary);
+            font-size: 3.8em;
+            margin-top: 0;
+            margin-bottom: 10px;
+            letter-spacing: 3px;
+            text-shadow: 4px 4px 10px black, 0 0 30px var(--primary);
+            transition: all 1s ease;
+        }
+
+        .status-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            padding: 10px;
+            border-bottom: 3px dashed var(--primary);
+            transition: all 1s ease;
+        }
+
+        .level-tag {
+            color: var(--primary);
+            font-size: 1.4em;
+            font-weight: bold;
+            text-shadow: 0 0 10px var(--primary);
+        }
+
+        .hearts-container {
+            font-size: 2.2em;
+            letter-spacing: 5px;
+        }
+
+        .heart {
+            color: var(--primary);
+            transition: all 0.5s ease;
+            text-shadow: 0 0 15px var(--primary);
+        }
+
+        .heart.spent {
+            color: #111 !important;
+            text-shadow: none !important;
+        }
+
+        .question-box {
+            font-size: 1.4em;
+            margin-bottom: 30px;
+            min-height: 80px;
+            color: #eee;
+            line-height: 1.5;
+        }
+
+        .options-grid {
+            display: grid;
+            gap: 15px;
+        }
+
+        .option-btn {
+            background: rgba(0,0,0,0.7);
+            color: white;
+            border: 2px solid var(--primary);
+            padding: 15px;
+            font-family: 'Special Elite', cursive;
+            font-size: 1.1em;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .option-btn:hover {
+            background: var(--primary);
+            color: black;
+            box-shadow: 0 0 35px var(--primary);
+            font-weight: bold;
+            transform: scale(1.02);
+        }
+
+        .overlay {
+            display: none;
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: #000;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 60;
+            border-radius: 15px;
+        }
+
+        .start-screen {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: #000;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-between;
+            z-index: 70;
+            box-sizing: border-box;
+            padding: 40px;
+            border-radius: 12px;
+        }
+
+        .start-screen p {
+            font-size: 1.2em;
+            color: #ccc;
+            line-height: 1.6;
+            margin: 20px 0;
+        }
+
+        .academic-footer {
+            margin-top: 20px;
+            text-align: center;
+            font-size: 0.85em;
+            color: #555;
+            border-top: 1px solid #222;
+            padding-top: 15px;
+            width: 100%;
+            max-width: 600px;
+            z-index: 5;
+            line-height: 1.6;
+        }
+
+        .academic-footer span {
+            color: var(--primary);
+            transition: all 1s ease;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="damage-flash" id="flash"></div>
+    <div class="blood-screen" id="blood-overlay"></div>
+
+    <div class="horror-creature" id="creature-top-left">🕷️</div>
+    <div class="horror-creature" id="creature-top-right">🦇</div>
+    <div class="horror-creature" id="creature-left">👁️‍🗨️</div>
+    <div class="horror-creature" id="creature-right">💀</div>
+    <div class="background-eyes">🚨</div>
+
+    <div class="game-container" id="container">
+        
+        <div id="start-ui" class="start-screen">
+            <div>
+                <h1>ESCAPE ROOM</h1>
+                <p>O Domínio de Bhaskara aprisionou os conceitos fundamentais da Análise Combinatória. Decifre as 10 salas conceituais antes que suas chances se esgotem nas sombras.</p>
+            </div>
+            
+            <button class="option-btn" onclick="startGame()" style="padding: 20px 50px; font-size: 1.4em; box-shadow: 0 0 25px var(--primary);">
+                INICIAR DESAFIO
+            </button>
+
+            <div class="academic-footer" style="border: none; padding: 0; margin-top: 30px;">
+                Trabalho de <span>Matemática Discreta</span> | Professor <span>Ali Reza</span><br>
+                Alunas: <span>Izabelly Vieira</span> e <span>Larissa Caputt</span><br>
+                Curso: <span>Sistemas de Informação</span>
+            </div>
+        </div>
+
+        <div id="game-ui" style="visibility: hidden;">
+            <div class="status-header">
+                <div class="level-tag" id="level-display">SALA: 1 / 10</div>
+                <div class="hearts-container" id="hearts">
+                    <span class="heart">♥</span><span class="heart">♥</span><span class="heart">♥</span>
+                </div>
+            </div>
+
+            <h1 id="theme-title" style="font-size: 2.8em;">O LABIRINTO</h1>
+            
+            <div class="question-box" id="question-text">
+                O ritual combinatório está carregando...
+            </div>
+
+            <div class="options-grid" id="options-container"></div>
+        </div>
+
+        <div id="overlay" class="overlay">
+            <h1 id="status-title" style="font-family: 'Creepster'; font-size: 5em;">MORTAL</h1>
+            <p id="status-msg" style="font-size: 1.3em; margin-bottom: 30px;"></p>
+            <button class="option-btn" onclick="resetGame()" style="padding: 15px 40px; font-size: 1.3em;">RECOMEÇAR O CALVÁRIO</button>
+        </div>
+    </div>
+
+    <footer class="academic-footer">
+        Trabalho de <span>Matemática Discreta</span> | Professor <span>Ali Reza</span><br>
+        Alunas: <span>Izabelly Vieira</span> e <span>Larissa Caputt</span> | <span>Sistemas de Informação</span>
+    </footer>
+
+    <script>
+        // BANCO DE DADOS EXPANDIDO: 10 questões exclusivas por sala (Total: 100 questões)
+        const bancoConceitual = {
+            1: [
+                { p: "Se uma lanchonete oferece 3 tipos de suco e 4 tipos de salgado, quantas combinações de 1 suco e 1 salgado podem ser feitas?", o: ["7", "12", "1", "14"], r: 1 },
+                { p: "Pelo Princípio Fundamental da Contagem (PFC), se um evento ocorre de 'm' maneiras e outro de 'n' maneiras, o total de formas de ocorrerem juntos é:", o: ["m + n", "m / n", "m * n", "m^n"], r: 2 },
+                { p: "Uma pessoa tem 2 saias e 5 blusas. De quantas maneiras diferentes ela pode se vestir escolhendo uma de cada?", o: ["7", "10", "25", "3"], r: 1 },
+                { p: "Quantos resultados possíveis existem ao lançar uma moeda e um dado de 6 lados simultaneamente?", o: ["8", "12", "36", "6"], r: 1 },
+                { p: "Um cinema tem 4 portas de entrada. De quantas maneiras uma pessoa pode entrar e sair por uma porta diferente?", o: ["16", "12", "8", "7"], r: 1 },
+                { p: "Se um teste possui 3 questões de múltipla escolha com 4 alternativas cada, de quantas maneiras diferentes ele pode ser respondido?", o: ["12", "64", "81", "7"], r: 1 },
+                { p: "Para pintar um outdoor, dispõe-se de 3 cores de fundo e 5 cores de letras. Quantas combinações distintas de fundo e letra existem?", o: ["8", "15", "25", "9"], r: 1 },
+                { p: "Quantos caminhos diferentes ligam a cidade A à cidade C, sabendo que existem 3 caminhos de A para B, e 3 caminhos de B para C?", o: ["6", "9", "27", "12"], r: 1 },
+                { p: "De quantos modos diferentes podemos comprar um sorvete escolhendo entre 2 tipos de casquinha e 6 sabores de cobertura?", o: ["8", "12", "36", "4"], r: 1 },
+                { p: "Uma fábrica produz carros em 3 modelos, com 4 opções de motores e 5 cores disponíveis. Quantas variações de carros podem ser geradas?", o: ["12", "60", "20", "15"], r: 1 }
+            ],
+            2: [
+                { p: "Quantos números de 2 algarismos distintos podemos formar usando os dígitos 1, 2, 3 e 4?", o: ["12", "16", "8", "6"], r: 0 },
+                { p: "Uma pessoa quer estipular uma senha com 3 letras distintas do conjunto {A, B, C, D}. Quantas opções ela tem?", o: ["64", "12", "24", "16"], r: 2 },
+                { p: "Quantos números de 3 algarismos distintos podemos formar com os dígitos elementares 5, 6 e 7?", o: ["9", "27", "6", "3"], r: 2 },
+                { p: "Com as letras da palavra 'SOL', quantos agrupamentos de 2 letras distintas podemos formar considerando a ordem?", o: ["6", "9", "3", "8"], r: 0 },
+                { p: "Quantas placas de identificação com 2 letras distintas (do alfabeto de 26 letras) podem ser criadas?", o: ["676", "650", "52", "500"], r: 1 },
+                { p: "Em uma corrida com 4 competidores, de quantas maneiras distintas podem ser preenchidos os dois primeiros lugares?", o: ["16", "12", "8", "6"], r: 1 },
+                { p: "Quantos números ímpares de 2 algarismos distintos podemos formar utilizando os algarismos 2, 3, 4 e 5?", o: ["6", "12", "4", "8"], r: 0 },
+                { p: "Uma senha deve conter 2 caracteres numéricos distintos extraídos de {1, 2, 3, 4, 5}. Quantas senhas existem?", o: ["25", "20", "10", "15"], r: 1 },
+                { p: "Quantas palavras de duas letras distintas podem ser formadas com as vogais {A, E, I, O, U}?", o: ["25", "20", "10", "15"], r: 1 },
+                { p: "Em uma eleição de grêmio com 5 candidatos, de quantos modos podemos escolher um Presidente e um Vice-Presidente?", o: ["25", "20", "10", "12"], r: 1 }
+            ],
+            3: [
+                { p: "O que representa a operação matemática Fatorial (n!) de um número inteiro positivo?", o: ["A soma de todos os números", "O produto de todos os inteiros de 1 até n", "A divisão sucessiva", "A potência quadrada"], r: 1 },
+                { p: "Qual é o valor exato do fatorial de 4 (4!)?", o: ["16", "24", "12", "8"], r: 1 },
+                { p: "Quanto vale a operação simplificada de 5! / 4! ?", o: ["20", "1", "5", "120"], r: 2 },
+                { p: "Qual é o resultado numérico exato de 3! + 0! ?", o: ["3", "6", "7", "4"], r: 2 },
+                { p: "Se simplificarmos a expressão fatorial 6! / 5! , obtemos qual valor?", o: ["30", "6", "1", "120"], r: 1 },
+                { p: "Qual o valor exato correspondente a 0! por convenção matemática fundamental?", o: ["0", "1", "Infinito", "Não existe"], r: 1 },
+                { p: "O valor numérico do fatorial de 5 (5!) é igual a:", o: ["24", "120", "60", "25"], r: 1 },
+                { p: "Qual o resultado final ao calcularmos a expressão (3! * 2!)?", o: ["6", "12", "5", "8"], r: 1 },
+                { p: "Qual é o valor numérico exato obtido ao calcular 4! - 3! ?", o: ["1", "18", "20", "8"], r: 1 },
+                { p: "Simplificando a expressão matemática 10! / 9!, encontramos qual valor?", o: ["90", "1", "10", "100"], r: 2 }
+            ],
+            4: [
+                { p: "Quantos anagramas possui a palavra simples 'MAPA' (considere a repetição da letra A)?", o: ["24", "12", "6", "4"], r: 1 },
+                { p: "Para calcular os anagramas de uma palavra com letras repetidas, dividimos o fatorial total pelo:", o: ["Número de vogais", "Fatorial do número de repetições", "Total de consoantes", "Número dois"], r: 1 },
+                { p: "Quantos anagramas distintos podem ser gerados a partir da palavra 'OVO'?", o: ["6", "3", "2", "1"], r: 1 },
+                { p: "Qual o total de anagramas associados à palavra 'BABA'?", o: ["24", "12", "6", "4"], r: 2 },
+                { p: "Quantos anagramas possui a palavra 'COCO'?", o: ["24", "12", "6", "4"], r: 2 },
+                { p: "A fórmula para permutações com elementos repetidos divide n! pelas repetições para evitar o quê?", o: ["Resultados negativos", "Contagem duplicada de agrupamentos idênticos", "Frações decimais", "Zerar o cálculo"], r: 1 },
+                { p: "Quantos anagramas existem para a palavra 'MAMÃ' (desconsidere o til estruturalmente)?", o: ["12", "6", "24", "4"], r: 1 },
+                { p: "Quantos caminhos em uma malha quadriculada podem ser feitos usando 2 passos para Direita e 2 para Cima?", o: ["24", "12", "6", "16"], r: 2 },
+                { p: "Quantos anagramas distintos possui a palavra 'RARA'?", o: ["24", "12", "6", "4"], r: 2 },
+                { p: "Calcule a quantidade de anagramas da palavra 'ARARA':", o: ["120", "10", "30", "24"], r: 1 }
+            ],
+            5: [
+                { p: "Em problemas de contagem, qual a principal diferença prática entre um Arranjo e uma Combinação?", o: ["No Arranjo a ordem importa; na Combinação a ordem não altera o grupo.", "Na Combinação a ordem importa.", "Combinação trabalha apenas com pares.", "Arranjo aceita elementos repetidos."], r: 0 },
+                { p: "Se precisamos criar uma senha bancária de 4 dígitos onde a ordem altera o acesso, lidamos com:", o: ["Combinação", "Arranjo", "Média Ponderada", "Matriz"], r: 1 },
+                { p: "Qual o valor do Arranjo de 4 elementos tomados 2 a 2 (A4,2)?", o: ["6", "12", "24", "8"], r: 1 },
+                { p: "Calcule o número de arranjos possíveis de 5 elementos tomados 3 a 3 (A5,3):", o: ["15", "60", "10", "20"], r: 1 },
+                { p: "Se um pódio de uma corrida de 6 pessoas premiará 1º e 2º lugares, o total de pódios é calculado por:", o: ["Combinação Simples", "Arranjo Simples", "Fatorial Puro", "Permutação Circular"], r: 1 },
+                { p: "O cálculo de quantas maneiras 3 diretores diferentes podem ocupar as cadeiras de Presidente, Secretário e Tesoureiro exige:", o: ["Arranjo", "Combinação", "Soma simples", "Matriz"], r: 0 },
+                { p: "Dispomos de 5 cores e queremos pintar uma bandeira de 2 listras horizontais com cores distintas. Usamos:", o: ["Arranjo", "Combinação", "Média", "Potência"], r: 0 },
+                { p: "Qual o valor do Arranjo de 3 elementos tomados 2 a 2 (A3,2)?", o: ["3", "6", "9", "2"], r: 1 },
+                { p: "Se mudarmos a ordem dos elementos em um Arranjo, o que acontece com o agrupamento?", o: ["Permanece idêntico", "Torna-se um agrupamento totalmente diferente", "Zera o resultado", "Vira uma combinação"], r: 1 },
+                { p: "Calcule o Arranjo de 6 elementos tomados 2 a 2 (A6,2):", o: ["15", "30", "36", "12"], r: 1 }
+            ],
+            6: [
+                { p: "Uma empresa deseja escolher uma comissão de 2 diretores a partir de 5 candidatos. A ordem não importa. Quantas comissões?", o: ["20", "10", "25", "5"], r: 1 },
+                { p: "Para calcular agrupamentos onde a ordem dos elementos NÃO altera o resultado, usamos:", o: ["Arranjo", "Combinação Simples", "Permutação Circular", "Fatorial duplo"], r: 1 },
+                { p: "Qual o valor numérico da Combinação de 4 elementos tomados 2 a 2 (C4,2)?", o: ["12", "6", "24", "4"], r: 1 },
+                { p: "De quantas maneiras podemos escolher uma dupla de alunos em uma sala com 6 estudantes?", o: ["30", "15", "36", "12"], r: 1 },
+                { p: "Calcule o valor da Combinação de 5 elementos escolhidos 3 a 3 (C5,3):", o: ["60", "10", "15", "20"], r: 1 },
+                { p: "Uma pizzaria oferece 5 ingredientes. Se o cliente pode escolher 2 ingredientes diferentes para a cobertura, quantas opções ele tem?", o: ["20", "10", "25", "15"], r: 1 },
+                { p: "Ao escolher 3 frutas distintas em uma fruteira que contém 4 opções para fazer um suco misto, quantas combinações existem?", o: ["4", "12", "24", "6"], r: 0 },
+                { p: "Se mudarmos a ordem dos elementos selecionados dentro de uma Combinação Simples, o grupo resultante:", o: ["Muda completamente", "Permanece exatamente o mesmo", "Fica inválido", "Duplica de valor"], r: 1 },
+                { p: "Quantos subconjuntos de exatamente 2 elementos possui um conjunto principal composto por 3 elementos?", o: ["6", "3", "9", "1"], r: 1 },
+                { p: "Calcule a Combinação de 6 elementos tomados 4 a 4 (C6,4):", o: ["30", "15", "20", "24"], r: 1 }
+            ],
+            7: [
+                { p: "Quantos anagramas possui a palavra 'PORTA'?", o: ["120", "24", "60", "720"], r: 0 },
+                { p: "De quantas maneiras distintas 5 pessoas podem se posicionar em uma fila indiana simples?", o: ["25", "120", "60", "50"], r: 1 },
+                { p: "Quantos anagramas possui a palavra 'LUA'?", o: ["3", "6", "9", "4"], r: 1 },
+                { p: "Se tivermos 3 livros diferentes, de quantas formas podemos organizá-los lado a lado em uma estante?", o: ["9", "6", "3", "12"], r: 1 },
+                { p: "A Permutação Simples de 'n' elementos distintos é equivalente a calcular matematicamente qual operação?", o: ["n * 2", "n!", "n^2", "n / 2"], r: 1 },
+                { p: "Quantos anagramas da palavra 'GATO' podem ser criados?", o: ["12", "24", "6", "16"], r: 1 },
+                { p: "De quantas maneiras 4 pessoas podem sentar-se em um banco de automóvel com 4 lugares vagos?", o: ["16", "24", "12", "8"], r: 1 },
+                { p: "Quantos anagramas possui a palavra 'BRUXA'?", o: ["24", "120", "60", "720"], r: 1 },
+                { p: "Quantas filas indianas diferentes podem ser formadas por apenas 2 pessoas?", o: ["1", "2", "4", "0"], r: 1 },
+                { p: "Quantos anagramas da palavra 'MEDO' começam com a letra M?", o: ["24", "6", "12", "4"], r: 1 }
+            ],
+            8: [
+                { p: "Dispomos de 6 cores de tinta e queremos pintar uma bandeira de 3 listras verticais (cores distintas). Quantas formas?", o: ["18", "120", "216", "20"], r: 1 },
+                { p: "Quantos números ímpares de 3 algarismos distintos podemos formar com os algarismos 1, 2, 4, 6 e 8?", o: ["60", "12", "48", "24"], r: 1 },
+                { p: "Quantos números de 3 algarismos distintos podem ser criados utilizando exclusivamente os dígitos {1, 2, 3, 4}?", o: ["64", "24", "12", "48"], r: 1 },
+                { p: "Temos 4 camisas e 3 calças. Quantos conjuntos diferentes formados por 1 camisa e 1 calça podemos vestir?", o: ["7", "12", "60", "24"], r: 1 },
+                { p: "Quantos números pares de 2 algarismos distintos podemos formar usando os dígitos {1, 2, 3, 4}?", o: ["12", "6", "8", "16"], r: 1 },
+                { p: "Uma linha de trem possui 5 estações. Quantos tipos de bilhetes unilaterais (de uma estação para outra) devem ser impressos?", o: ["25", "20", "10", "15"], r: 1 },
+                { p: "Quantos números de 3 algarismos (com ou sem repetição) podemos formar usando apenas os dígitos 1 e 2?", o: ["6", "8", "9", "4"], r: 1 },
+                { p: "Para criar um código de 2 letras maiúsculas usando o alfabeto reduzido {A, B, C, D, E}, permitindo repetições, quantas opções há?", o: ["20", "25", "10", "30"], r: 1 },
+                { p: "Em uma lanchonete, um combo é composto por 1 sanduíche (entre 3 opções) e 1 bebida (entre 5 opções). Quantos combos existem?", o: ["8", "15", "25", "9"], r: 1 },
+                { p: "Quantos números de 2 algarismos distintos podem ser gerados a partir do conjunto de dígitos {5, 6, 7, 8, 9}?", o: ["25", "20", "10", "15"], r: 1 }
+            ],
+            9: [
+                { p: "Um técnico de vôlei possui 8 jogadores aptos. Quantos times diferentes de 6 jogadores ele pode escalar?", o: ["48", "28", "56", "14"], r: 1 },
+                { p: "Quantos anagramas começam com a letra 'R' na palavra 'ROMA'?", o: ["24", "6", "12", "4"], r: 1 },
+                { p: "Uma sala possui 7 lâmpadas independentes. De quantas maneiras podemos iluminar a sala acendendo exatamente 2 delas?", o: ["42", "21", "14", "49"], r: 1 },
+                { p: "De um grupo de 5 especialistas, quantos comitês de 3 membros sem cargos definidos podem ser formados?", o: ["60", "10", "15", "20"], r: 1 },
+                { p: "Quantos anagramas da palavra 'PATO' terminam com a letra O?", o: ["24", "6", "12", "4"], r: 1 },
+                { p: "Em um campeonato de xadrez com 6 jogadores, onde todos jogam contra todos uma única vez, quantas partidas ocorrerão?", o: ["36", "15", "30", "12"], r: 1 },
+                { p: "Um baralho simplificado tem 5 cartas distintas. Quantas duplas de cartas diferentes podem ser sorteadas?", o: ["20", "10", "25", "15"], r: 1 },
+                { p: "Quantas comissões de 4 pessoas podem ser escolhidas em um grupo composto por 5 voluntários?", o: ["20", "5", "10", "25"], r: 1 },
+                { p: "Quantos anagramas da palavra 'LÁPIS' começam com uma consoante?", o: ["120", "72", "48", "24"], r: 1 },
+                { p: "Dispomos de 6 pontos distintos marcados sobre uma circunferência. Quantos triângulos podem ser formados unindo esses pontos?", o: ["120", "20", "36", "15"], r: 1 }
+            ],
+            10: [
+                { p: "Em uma reunião há 10 pessoas. Se todas se cumprimentarem com um aperto de mãos, quantos ocorrerão?", o: ["100", "90", "45", "20"], r: 2 },
+                { p: "Se uma prova possui 10 questões do tipo Verdadeiro ou Falso, de quantas maneiras o gabarito pode ser preenchido?", o: ["20", "100", "512", "1024"], r: 3 },
+                { p: "De quantas maneiras 3 casais podem se sentar em uma fila de 6 assentos de modo que cada casal fique junto?", o: ["720", "48", "8", "24"], r: 1 },
+                { p: "Quantos divisores inteiros e positivos possui o número composto 60?", o: ["6", "12", "10", "8"], r: 1 },
+                { p: "Em uma circunferência são marcados 5 pontos distintos. Quantas cordas ligando dois desses pontos podem ser desenhadas?", o: ["20", "10", "25", "5"], r: 1 },
+                { p: "Se dispomos de 4 livros de Matemática e 3 de Física, de quantas formas podemos organizá-los mantendo os da mesma matéria juntos?", o: ["144", "288", "12", "24"], r: 1 },
+                { p: "Quantos números de 4 algarismos distintos podemos formar usando os algarismos do sistema decimal {1, 2, 3, 4, 5, 6}?", o: ["1296", "360", "24", "720"], r: 1 },
+                { p: "De quantas maneiras podemos distribuir 3 prêmios diferentes para 3 pessoas distintas (uma pessoa pode ganhar mais de um)?", o: ["9", "27", "6", "3"], r: 1 },
+                { p: "Quantos caminhos existem para ir de um ponto A a um ponto B em um bloco tridimensional dando 3 passos em X, 2 em Y e 1 em Z?", o: ["60", "720", "6", "120"], r: 0 },
+                { p: "Em uma bandeja há 5 doces e 5 salgados distintos. De quantas maneiras posso escolher 2 doces e 2 salgados?", o: ["100", "50", "25", "20"], r: 0 }
+            ]
+        };
+
+        const configuracoesEstilofase = {
+            1: { primary: "#FF007F", bg: "#000", bgBox: "rgba(10,10,10,0.9)", border: "solid", scaleCr: "1" },
+            2: { primary: "#8B0000", bg: "#050000", bgBox: "rgba(20,0,0,0.85)", border: "double", scaleCr: "1.08" },
+            3: { primary: "#4B0082", bg: "#020008", bgBox: "rgba(10,0,20,0.9)", border: "dashed", scaleCr: "1.15" },
+            4: { primary: "#00FFCD", bg: "#000806", bgBox: "rgba(0,15,10,0.95)", border: "solid", scaleCr: "1.22" },
+            5: { primary: "#FF4500", bg: "#0d0300", bgBox: "rgba(25,5,0,0.9)", border: "groove", scaleCr: "1.30" },
+            6: { primary: "#00FF00", bg: "#000a00", bgBox: "rgba(0,10,0,0.95)", border: "ridge", scaleCr: "1.38" },
+            7: { primary: "#9400D3", bg: "#04000a", bgBox: "rgba(15,0,20,0.9)", border: "dotted", scaleCr: "1.45" },
+            8: { primary: "#FFD700", bg: "#0a0900", bgBox: "rgba(20,20,0,0.9)", border: "solid", scaleCr: "1.52" },
+            9: { primary: "#FF1493", bg: "#0d0006", bgBox: "rgba(20,0,10,0.95)", border: "double", scaleCr: "1.60" },
+            10: { primary: "#FFFFFF", bg: "#151515", bgBox: "rgba(0,0,0,1)", border: "solid", scaleCr: "1.80" }
+        };
+
+        let level = 1;
+        let lives = 3; 
+        let currentQuestion = null;
+        let audioCtx = null;
+        let historicoQuestoes = {}; 
+
+        // Sorteio inteligente e proteção contra repetição imediata
+        function inicializarHistorico() {
+            for (let sala in bancoConceitual) {
+                historicoQuestoes[sala] = [...bancoConceitual[sala]];
+            }
+        }
+
+        function mutarDesignInterface(fase) {
+            const config = configuracoesEstilofase[fase] || configuracoesEstilofase[1];
+            
+            document.documentElement.style.setProperty('--primary', config.primary);
+            document.documentElement.style.setProperty('--bg-dark', config.bg);
+            document.documentElement.style.setProperty('--container-bg', config.bgBox);
+            document.documentElement.style.setProperty('--border-style', config.border);
+
+            const scale = config.scaleCr;
+            document.getElementById('creature-left').style.transform = `scale(${scale})`;
+            document.getElementById('creature-right').style.transform = `scale(${scale})`;
+            document.getElementById('creature-top-left').style.transform = `scale(${scale})`;
+            document.getElementById('creature-top-right').style.transform = `scale(${scale})`;
+        }
+
+        function startGame() {
+            document.getElementById('start-ui').style.display = 'none';
+            document.getElementById('game-ui').style.visibility = 'visible';
+            toggleMusic();
+        }
+
+        function init() {
+            level = 1;
+            lives = 3;
+            document.getElementById('overlay').style.display = 'none';
+            document.getElementById('blood-overlay').style.display = 'none';
+            inicializarHistorico();
+            mutarDesignInterface(level);
+            loadQuestion();
+        }
+
+        function loadQuestion() {
+            // Se as questões da sala atual acabarem na rodada corrente, recarrega o sub-banco da fase
+            if (!historicoQuestoes[level] || historicoQuestoes[level].length === 0) {
+                historicoQuestoes[level] = [...bancoConceitual[level]];
+            }
+
+            const list = historicoQuestoes[level];
+            const randomIndex = Math.floor(Math.random() * list.length);
+            
+            // O .splice(index, 1)[0] retira a questão do deck atual de sorteio para nunca repetir consecutivamente
+            currentQuestion = list.splice(randomIndex, 1)[0]; 
+            
+            document.getElementById('level-display').innerText = `SALA: ${level} / 10`;
+            document.getElementById('question-text').innerText = currentQuestion.p;
+            
+            const container = document.getElementById('options-container');
+            container.innerHTML = '';
+            
+            currentQuestion.o.forEach((opt, i) => {
+                const btn = document.createElement('button');
+                btn.className = 'option-btn';
+                btn.innerText = opt;
+                btn.onclick = () => check(i);
+                container.appendChild(btn);
+            });
+            updateHearts();
+        }
+
+        function check(idx) {
+            if (idx === currentQuestion.r) {
+                if (level === 10) {
+                    win();
+                } else {
+                    level++;
+                    mutarDesignInterface(level);
+                    loadQuestion();
+                }
+            } else {
+                lives--;
+                updateHearts();
+                
+                const flash = document.getElementById('flash');
+                flash.style.opacity = '1';
+                setTimeout(() => flash.style.opacity = '0', 150);
+
+                if (lives <= 0) {
+                    gameOver();
+                } else {
+                    alert("Cálculo errado! As criaturas mudaram o enigma da sala.");
+                    loadQuestion(); // Sorteia uma nova questão inédita dentro do deck da mesma sala
+                }
+            }
+        }
+
+        function updateHearts() {
+            const heartElements = document.querySelectorAll('.heart');
+            heartElements.forEach((h, i) => {
+                if (i >= lives) h.classList.add('spent');
+                else h.classList.remove('spent');
+            });
+        }
+
+        function gameOver() {
+            document.getElementById('blood-overlay').style.display = 'block';
+            
+            setTimeout(() => {
+                const overlay = document.getElementById('overlay');
+                overlay.style.display = 'flex';
+                document.getElementById('status-title').innerText = "DEVORADO";
+                document.getElementById('status-title').style.color = "#FF0000";
+                document.getElementById('status-msg').innerText = "As criaturas tomaram a sala. As chances escorreram pelas paredes.";
+            }, 800);
+        }
+
+        function win() {
+            const overlay = document.getElementById('overlay');
+            overlay.style.display = 'flex';
+            document.getElementById('status-title').innerText = "SOBREVIVENTE";
+            document.getElementById('status-title').style.color = "#00FF00";
+            document.getElementById('status-msg').innerText = "As criaturas recuaram! Você decifrou a Análise Combinatória perfeitamente!";
+        }
+
+        function resetGame() {
+            init();
+        }
+
+        function toggleMusic() {
+            if (audioCtx) return;
+            audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            
+            const droneOsc = audioCtx.createOscillator();
+            const droneGain = audioCtx.createGain();
+            droneOsc.type = 'sawtooth';
+            droneOsc.frequency.setValueAtTime(28.00, audioCtx.currentTime);
+            
+            const lowpass = audioCtx.createBiquadFilter();
+            lowpass.type = 'lowpass';
+            lowpass.frequency.setValueAtTime(65, audioCtx.currentTime);
+            lowpass.Q.setValueAtTime(5, audioCtx.currentTime);
+
+            droneOsc.connect(lowpass);
+            lowpass.connect(droneGain);
+            droneGain.connect(audioCtx.destination);
+            droneGain.gain.setValueAtTime(0.35, audioCtx.currentTime);
+            droneOsc.start();
+
+            setInterval(() => {
+                const ghostOsc = audioCtx.createOscillator();
+                const ghostGain = audioCtx.createGain();
+                ghostOsc.type = 'sawtooth';
+                ghostOsc.frequency.setValueAtTime(Math.random() * 15 + 45, audioCtx.currentTime); 
+                
+                const ghostFilter = audioCtx.createBiquadFilter();
+                ghostFilter.type = 'bandpass';
+                ghostFilter.frequency.setValueAtTime(Math.random() * 200 + 100, audioCtx.currentTime);
+
+                ghostOsc.connect(ghostFilter);
+                ghostFilter.connect(ghostGain);
+                ghostGain.connect(audioCtx.destination);
+                
+                ghostGain.gain.setValueAtTime(0, audioCtx.currentTime);
+                ghostGain.gain.linearRampToValueAtTime(0.25, audioCtx.currentTime + 1.5);
+                ghostGain.gain.linearRampToValueAtTime(0, audioCtx.currentTime + 3.5);
+                
+                ghostOsc.start();
+                ghostOsc.stop(audioCtx.currentTime + 3.5);
+            }, 2500);
+
+            setInterval(() => {
+                const screechOsc = audioCtx.createOscillator();
+                const screechGain = audioCtx.createGain();
+                screechOsc.type = 'triangle';
+                const scaryFreqs = [666.66, 731.22, 888.88];
+                const selectedFreq = scaryFreqs[Math.floor(Math.random() * scaryFreqs.length)];
+                screechOsc.frequency.setValueAtTime(selectedFreq, audioCtx.currentTime);
+                
+                const panicMod = audioCtx.createOscillator();
+                const panicGain = audioCtx.createGain();
+                panicMod.frequency.setValueAtTime(35, audioCtx.currentTime);
+                panicGain.gain.setValueAtTime(50, audioCtx.currentTime);
+                
+                panicMod.connect(panicGain);
+                panicGain.connect(screechOsc.frequency);
+                
+                screechGain.gain.setValueAtTime(0, audioCtx.currentTime);
+                screechGain.gain.linearRampToValueAtTime(0.18, audioCtx.currentTime + 0.1); 
+                screechGain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 2.0);
+                
+                screechOsc.connect(screechGain);
+                screechGain.connect(audioCtx.destination);
+                
+                panicMod.start();
+                screechOsc.start();
+                panicMod.stop(audioCtx.currentTime + 2.0);
+                screechOsc.stop(audioCtx.currentTime + 2.0);
+            }, 6000);
+        }
+
+        window.onload = function() {
+            init();
+        };
+    </script>
+</body>
+</html>
