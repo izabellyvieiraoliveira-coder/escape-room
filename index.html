@@ -2,8 +2,8 @@
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ESCAPE ROOM: Análise Combinatória</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+    <title>ESCAPE ROOM: MATEMÁTICA DISCRETA</title>
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght=700&family=Special+Elite&family=Creepster&display=swap" rel="stylesheet">
     
     <style>
@@ -19,6 +19,8 @@
             color: white;
             font-family: 'Special Elite', cursive;
             margin: 0;
+            padding: 10px; 
+            box-sizing: border-box;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -57,32 +59,38 @@
 
         .horror-creature {
             position: fixed;
-            font-size: 8rem; 
+            font-size: 5rem; 
             user-select: none;
             z-index: 1;
             transition: transform 1s ease, opacity 1s ease, filter 1s ease;
         }
 
+        @media (min-width: 1024px) {
+            .horror-creature {
+                font-size: 8rem; 
+            }
+        }
+
         #creature-left {
-            left: 4%; top: 35%;
+            left: 2%; top: 35%;
             filter: drop-shadow(0 0 30px var(--primary)) contrast(2) brightness(0.6) hue-rotate(45deg);
             animation: glitchSpecter 3.5s infinite ease-in-out;
         }
 
         #creature-right {
-            right: 4%; bottom: 15%;
+            right: 2%; bottom: 15%;
             filter: drop-shadow(0 0 30px var(--primary)) grayscale(1) invert(1) brightness(0.7);
             animation: twitchEntity 2.5s infinite linear;
         }
 
         #creature-top-left {
-            left: 6%; top: 5%; font-size: 6rem;
+            left: 4%; top: 5%; font-size: 4rem;
             filter: drop-shadow(0 0 25px var(--primary)) brightness(0.4) saturate(0.5);
             animation: crawlSpider 4s infinite alternate ease-in-out;
         }
 
         #creature-top-right {
-            right: 6%; top: 8%; font-size: 6.5rem;
+            right: 4%; top: 8%; font-size: 4.5rem;
             filter: drop-shadow(0 0 25px var(--primary)) invert(0.3) contrast(1.5);
             animation: dashBat 3s infinite ease-in-out;
         }
@@ -129,12 +137,16 @@
             100% { opacity: 0.4; transform: scale(1.1); }
         }
 
+        /* AJUSTE DO CONTAINER: Adaptável à altura da tela com scroll se necessário */
         .game-container {
-            width: 90%;
+            width: 100%;
             max-width: 600px;
+            max-height: 90vh; 
+            overflow-y: auto; 
             background: var(--container-bg);
             border: 5px var(--border-style) var(--primary);
-            padding: 40px;
+            padding: 30px 20px;
+            box-sizing: border-box;
             box-shadow: 0 0 60px var(--primary);
             text-align: center;
             position: relative;
@@ -146,7 +158,7 @@
         h1 {
             font-family: 'Creepster', cursive;
             color: var(--primary);
-            font-size: 3.8em;
+            font-size: 3em; 
             margin-top: 0;
             margin-bottom: 10px;
             letter-spacing: 3px;
@@ -158,7 +170,7 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 30px;
+            margin-bottom: 20px;
             padding: 10px;
             border-bottom: 3px dashed var(--primary);
             transition: all 1s ease;
@@ -166,13 +178,13 @@
 
         .level-tag {
             color: var(--primary);
-            font-size: 1.4em;
+            font-size: 1.2em;
             font-weight: bold;
             text-shadow: 0 0 10px var(--primary);
         }
 
         .hearts-container {
-            font-size: 2.2em;
+            font-size: 1.8em;
             letter-spacing: 5px;
         }
 
@@ -188,9 +200,9 @@
         }
 
         .question-box {
-            font-size: 1.4em;
-            margin-bottom: 30px;
-            min-height: 80px;
+            font-size: 1.2em;
+            margin-bottom: 25px;
+            min-height: 60px;
             color: #eee;
             line-height: 1.5;
         }
@@ -204,7 +216,7 @@
             background: rgba(0,0,0,0.7);
             color: white;
             border: 2px solid var(--primary);
-            padding: 15px;
+            padding: 12px;
             font-family: 'Special Elite', cursive;
             font-size: 1.1em;
             cursor: pointer;
@@ -229,6 +241,8 @@
             justify-content: center;
             z-index: 60;
             border-radius: 15px;
+            padding: 20px;
+            box-sizing: border-box;
         }
 
         .start-screen {
@@ -241,21 +255,22 @@
             justify-content: space-between;
             z-index: 70;
             box-sizing: border-box;
-            padding: 40px;
+            padding: 30px 20px;
             border-radius: 12px;
+            overflow-y: auto;
         }
 
         .start-screen p {
-            font-size: 1.2em;
+            font-size: 1.1em;
             color: #ccc;
             line-height: 1.6;
-            margin: 20px 0;
+            margin: 15px 0;
         }
 
         .academic-footer {
             margin-top: 20px;
             text-align: center;
-            font-size: 0.85em;
+            font-size: 0.8em;
             color: #555;
             border-top: 1px solid #222;
             padding-top: 15px;
@@ -263,6 +278,7 @@
             max-width: 600px;
             z-index: 5;
             line-height: 1.6;
+            box-sizing: border-box;
         }
 
         .academic-footer span {
@@ -287,14 +303,14 @@
         <div id="start-ui" class="start-screen">
             <div>
                 <h1>ESCAPE ROOM</h1>
-                <p>O Domínio de Bhaskara aprisionou os conceitos fundamentais da Análise Combinatória. Decifre as 10 salas conceituais antes que suas chances se esgotem nas sombras.</p>
+                <p>Você foi trancado em um labirinto dimensional de alta segurança computacional. Para romper as barreiras digitais de criptografia e escapar com vida, você deve resolver os desafios lógicos de Análise Combinatória. Atenção: cada erro drena sua vitalidade.</p>
             </div>
             
-            <button class="option-btn" onclick="startGame()" style="padding: 20px 50px; font-size: 1.4em; box-shadow: 0 0 25px var(--primary);">
-                INICIAR DESAFIO
+            <button class="option-btn" onclick="startGame()" style="padding: 15px 40px; font-size: 1.3em; box-shadow: 0 0 25px var(--primary); margin: 15px 0;">
+                INICIAR ESCAPE
             </button>
 
-            <div class="academic-footer" style="border: none; padding: 0; margin-top: 30px;">
+            <div class="academic-footer" style="border: none; padding: 0; margin-top: 15px;">
                 Trabalho de <span>Matemática Discreta</span> | Professor <span>Ali Reza</span><br>
                 Alunas: <span>Izabelly Vieira</span> e <span>Larissa Caputt</span><br>
                 Curso: <span>Sistemas de Informação</span>
@@ -309,19 +325,19 @@
                 </div>
             </div>
 
-            <h1 id="theme-title" style="font-size: 2.8em;">O LABIRINTO</h1>
+            <h1 id="theme-title" style="font-size: 2.4em;">LABORATÓRIO</h1>
             
             <div class="question-box" id="question-text">
-                O ritual combinatório está carregando...
+                Carregando dados estruturais...
             </div>
 
             <div class="options-grid" id="options-container"></div>
         </div>
 
         <div id="overlay" class="overlay">
-            <h1 id="status-title" style="font-family: 'Creepster'; font-size: 5em;">MORTAL</h1>
-            <p id="status-msg" style="font-size: 1.3em; margin-bottom: 30px;"></p>
-            <button class="option-btn" onclick="resetGame()" style="padding: 15px 40px; font-size: 1.3em;">RECOMEÇAR O CALVÁRIO</button>
+            <h1 id="status-title" style="font-family: 'Creepster'; font-size: 4em;">MORTAL</h1>
+            <p id="status-msg" style="font-size: 1.2em; margin-bottom: 25px;"></p>
+            <button class="option-btn" onclick="resetGame()" style="padding: 12px 35px; font-size: 1.2em;">RECOMEÇAR O CALVÁRIO</button>
         </div>
     </div>
 
@@ -331,127 +347,126 @@
     </footer>
 
     <script>
-        // BANCO DE DADOS EXPANDIDO: 10 questões exclusivas por sala (Total: 100 questões)
         const bancoConceitual = {
             1: [
-                { p: "Se uma lanchonete oferece 3 tipos de suco e 4 tipos de salgado, quantas combinações de 1 suco e 1 salgado podem ser feitas?", o: ["7", "12", "1", "14"], r: 1 },
-                { p: "Pelo Princípio Fundamental da Contagem (PFC), se um evento ocorre de 'm' maneiras e outro de 'n' maneiras, o total de formas de ocorrerem juntos é:", o: ["m + n", "m / n", "m * n", "m^n"], r: 2 },
-                { p: "Uma pessoa tem 2 saias e 5 blusas. De quantas maneiras diferentes ela pode se vestir escolhendo uma de cada?", o: ["7", "10", "25", "3"], r: 1 },
-                { p: "Quantos resultados possíveis existem ao lançar uma moeda e um dado de 6 lados simultaneamente?", o: ["8", "12", "36", "6"], r: 1 },
-                { p: "Um cinema tem 4 portas de entrada. De quantas maneiras uma pessoa pode entrar e sair por uma porta diferente?", o: ["16", "12", "8", "7"], r: 1 },
-                { p: "Se um teste possui 3 questões de múltipla escolha com 4 alternativas cada, de quantas maneiras diferentes ele pode ser respondido?", o: ["12", "64", "81", "7"], r: 1 },
-                { p: "Para pintar um outdoor, dispõe-se de 3 cores de fundo e 5 cores de letras. Quantas combinações distintas de fundo e letra existem?", o: ["8", "15", "25", "9"], r: 1 },
-                { p: "Quantos caminhos diferentes ligam a cidade A à cidade C, sabendo que existem 3 caminhos de A para B, e 3 caminhos de B para C?", o: ["6", "9", "27", "12"], r: 1 },
-                { p: "De quantos modos diferentes podemos comprar um sorvete escolhendo entre 2 tipos de casquinha e 6 sabores de cobertura?", o: ["8", "12", "36", "4"], r: 1 },
-                { p: "Uma fábrica produz carros em 3 modelos, com 4 opções de motores e 5 cores disponíveis. Quantas variações de carros podem ser geradas?", o: ["12", "60", "20", "15"], r: 1 }
+                { p: "Se uma lanchonete oferece 3 tipos de suco e 4 tipos de salgado, quantas combinações de 1 suco e 1 salgado podem ser feitas?", o: ["7 combinações", "12 combinações", "1 combinação", "14 combinações"], r: 1 },
+                { p: "Pelo Princípio Fundamental da Contagem (PFC), se um evento ocorre de 'm' maneiras e outro de 'n' maneiras, o total de formas de ocorrerem juntos é:", o: ["m + n", "m - n", "m * n", "m / n"], r: 2 },
+                { p: "Uma pessoa tem 2 saias e 5 blusas. De quantas maneiras diferentes ela pode se vestir escolher uma de cada?", o: ["10 maneiras", "7 maneiras", "3 maneiras", "8 maneiras"], r: 0 },
+                { p: "Quantos resultados possíveis existem ao lançar uma moeda e um dado de 6 lados simultaneamente?", o: ["8 resultados", "12 resultados", "36 resultados", "2 resultados"], r: 1 },
+                { p: "Um cinema tem 4 portas de entrada. De quantas maneiras uma pessoa pode entrar e sair por uma porta diferente?", o: ["16 maneiras", "8 maneiras", "12 maneiras", "4 maneiras"], r: 2 },
+                { p: "Se um teste possui 3 questões de múltipla escolha com 4 alternativas cada, de quantas maneiras diferentes ele pode ser respondido?", o: ["12 maneiras", "64 maneiras", "81 maneiras", "7 maneiras"], r: 1 },
+                { p: "Para pintar um outdoor, dispõe-se de 3 cores de fundo e 5 cores de letras. Quantas combinações distintas de fundo e letra existem?", o: ["15 combinações", "8 combinações", "25 combinações", "9 combinações"], r: 0 },
+                { p: "Quantos caminhos diferentes ligam a cidade A à cidade C, sabendo que existem 3 caminhos de A para B, e 3 caminhos de B para C?", o: ["6 caminhos", "9 caminhos", "1 caminho", "12 caminhos"], r: 1 },
+                { p: "De quantos modos diferentes podemos comprar um sorvete escolhendo entre 2 tipos de casquinha e 6 sabores de cobertura?", o: ["8 modos", "12 modos", "36 modos", "4 modos"], r: 1 },
+                { p: "Uma fábrica produz carros em 3 modelos, com 4 opções de motores e 5 cores disponíveis. Quantas variações de carros podem ser geradas?", o: ["12 variações", "60 variações", "120 variações", "15 variações"], r: 1 }
             ],
             2: [
-                { p: "Quantos números de 2 algarismos distintos podemos formar usando os dígitos 1, 2, 3 e 4?", o: ["12", "16", "8", "6"], r: 0 },
-                { p: "Uma pessoa quer estipular uma senha com 3 letras distintas do conjunto {A, B, C, D}. Quantas opções ela tem?", o: ["64", "12", "24", "16"], r: 2 },
-                { p: "Quantos números de 3 algarismos distintos podemos formar com os dígitos elementares 5, 6 e 7?", o: ["9", "27", "6", "3"], r: 2 },
-                { p: "Com as letras da palavra 'SOL', quantos agrupamentos de 2 letras distintas podemos formar considerando a ordem?", o: ["6", "9", "3", "8"], r: 0 },
-                { p: "Quantas placas de identificação com 2 letras distintas (do alfabeto de 26 letras) podem ser criadas?", o: ["676", "650", "52", "500"], r: 1 },
-                { p: "Em uma corrida com 4 competidores, de quantas maneiras distintas podem ser preenchidos os dois primeiros lugares?", o: ["16", "12", "8", "6"], r: 1 },
-                { p: "Quantos números ímpares de 2 algarismos distintos podemos formar utilizando os algarismos 2, 3, 4 e 5?", o: ["6", "12", "4", "8"], r: 0 },
-                { p: "Uma senha deve conter 2 caracteres numéricos distintos extraídos de {1, 2, 3, 4, 5}. Quantas senhas existem?", o: ["25", "20", "10", "15"], r: 1 },
-                { p: "Quantas palavras de duas letras distintas podem ser formadas com as vogais {A, E, I, O, U}?", o: ["25", "20", "10", "15"], r: 1 },
-                { p: "Em uma eleição de grêmio com 5 candidatos, de quantos modos podemos escolher um Presidente e um Vice-Presidente?", o: ["25", "20", "10", "12"], r: 1 }
+                { p: "Quantos números de 2 algarismos distintos podemos formar usando os dígitos 1, 2, 3 e 4?", o: ["16 números", "12 números", "8 números", "6 números"], r: 1 },
+                { p: "Uma pessoa quer estipular uma senha com 3 letras distintas do conjunto {A, B, C, D}. Quantas opções ela tem?", o: ["24 opções", "64 opções", "12 opções", "4 opções"], r: 0 },
+                { p: "Quantos números de 3 algarismos distintos podemos formar com os dígitos elementares 5, 6 e 7?", o: ["9 números", "27 números", "6 números", "3 números"], r: 2 },
+                { p: "Com as letras da palavra 'SOL', quantos agrupamentos de 2 letras distintas podemos formar considerando a ordem?", o: ["9 grupos", "3 grupos", "6 grupos", "5 grupos"], r: 2 },
+                { p: "Quantas placas de identificação com 2 letras distintas (do alfabeto de 26 letras) podem ser criadas?", o: ["676 placas", "650 placas", "52 placas", "26 placas"], r: 1 },
+                { p: "Em uma corrida com 4 competidores, de quantas maneiras distintas podem ser preenchidos os dois primeiros lugares?", o: ["12 maneiras", "16 maneiras", "8 maneiras", "6 maneiras"], r: 0 },
+                { p: "Quantos números ímpares de 2 algarismos distintos podemos formar utilizando os algarismos 2, 3, 4 e 5?", o: ["12 números", "6 números", "4 números", "2 números"], r: 1 },
+                { p: "Uma senha deve conter 2 caracteres numéricos distintos extraídos de {1, 2, 3, 4, 5}. Quantas senhas existem?", o: ["25 senhas", "20 senhas", "10 senhas", "15 senhas"], r: 1 },
+                { p: "Quantas palavras de duas letras distintas podem ser formadas com as vogais {A, E, I, O, U}?", o: ["25 palavras", "20 palavras", "10 palavras", "12 palavras"], r: 1 },
+                { p: "Em uma eleição de grêmio com 5 candidatos, de quantos modos podemos escolher um Presidente e um Vice-Presidente?", o: ["20 modos", "25 modos", "10 modos", "5 modos"], r: 0 }
             ],
             3: [
-                { p: "O que representa a operação matemática Fatorial (n!) de um número inteiro positivo?", o: ["A soma de todos os números", "O produto de todos os inteiros de 1 até n", "A divisão sucessiva", "A potência quadrada"], r: 1 },
+                { p: "O que representa a operação matemática Fatorial (n!) de um número inteiro positivo?", o: ["A soma de todos os inteiros de 1 a n", "O produto de todos os inteiros de 1 a n", "A potência de n elevada a n", "A divisão de n por 2"], r: 1 },
                 { p: "Qual é o valor exato do fatorial de 4 (4!)?", o: ["16", "24", "12", "8"], r: 1 },
-                { p: "Quanto vale a operação simplificada de 5! / 4! ?", o: ["20", "1", "5", "120"], r: 2 },
-                { p: "Qual é o resultado numérico exato de 3! + 0! ?", o: ["3", "6", "7", "4"], r: 2 },
-                { p: "Se simplificarmos a expressão fatorial 6! / 5! , obtemos qual valor?", o: ["30", "6", "1", "120"], r: 1 },
-                { p: "Qual o valor exato correspondente a 0! por convenção matemática fundamental?", o: ["0", "1", "Infinito", "Não existe"], r: 1 },
-                { p: "O valor numérico do fatorial de 5 (5!) é igual a:", o: ["24", "120", "60", "25"], r: 1 },
-                { p: "Qual o resultado final ao calcularmos a expressão (3! * 2!)?", o: ["6", "12", "5", "8"], r: 1 },
-                { p: "Qual é o valor numérico exato obtido ao calcular 4! - 3! ?", o: ["1", "18", "20", "8"], r: 1 },
-                { p: "Simplificando a expressão matemática 10! / 9!, encontramos qual valor?", o: ["90", "1", "10", "100"], r: 2 }
+                { p: "Quanto vale a operação simplificada de 5! / 4! ?", o: ["5", "20", "1", "120"], r: 0 },
+                { p: "Qual é o resultado numérico exato de 3! + 0! ?", o: ["6", "7", "3", "4"], r: 1 },
+                { p: "Se simplificarmos a expressão fatorial 6! / 5! , obtemos qual valor?", o: ["30", "6", "1", "720"], r: 1 },
+                { p: "Qual o valor exato correspondente a 0! por convenção matemática fundamental?", o: ["0", "1", "Não existe", "Infinito"], r: 1 },
+                { p: "O valor numérico do fatorial de 5 (5!) é igual a:", o: ["60", "24", "120", "100"], r: 2 },
+                { p: "Qual o resultado final ao calcularmos a expressão (3! * 2!)?", o: ["12", "6", "5", "36"], r: 0 },
+                { p: "Qual é o valor numérico exato obtido ao calcular 4! - 3! ?", o: ["1", "18", "6", "12"], r: 1 },
+                { p: "Simplificando a expressão matemática 10! / 9!, encontramos qual valor?", o: ["10", "90", "1", "100"], r: 0 }
             ],
             4: [
-                { p: "Quantos anagramas possui a palavra simples 'MAPA' (considere a repetição da letra A)?", o: ["24", "12", "6", "4"], r: 1 },
-                { p: "Para calcular os anagramas de uma palavra com letras repetidas, dividimos o fatorial total pelo:", o: ["Número de vogais", "Fatorial do número de repetições", "Total de consoantes", "Número dois"], r: 1 },
-                { p: "Quantos anagramas distintos podem ser gerados a partir da palavra 'OVO'?", o: ["6", "3", "2", "1"], r: 1 },
-                { p: "Qual o total de anagramas associados à palavra 'BABA'?", o: ["24", "12", "6", "4"], r: 2 },
-                { p: "Quantos anagramas possui a palavra 'COCO'?", o: ["24", "12", "6", "4"], r: 2 },
-                { p: "A fórmula para permutações com elementos repetidos divide n! pelas repetições para evitar o quê?", o: ["Resultados negativos", "Contagem duplicada de agrupamentos idênticos", "Frações decimais", "Zerar o cálculo"], r: 1 },
-                { p: "Quantos anagramas existem para a palavra 'MAMÃ' (desconsidere o til estruturalmente)?", o: ["12", "6", "24", "4"], r: 1 },
-                { p: "Quantos caminhos em uma malha quadriculada podem ser feitos usando 2 passos para Direita e 2 para Cima?", o: ["24", "12", "6", "16"], r: 2 },
-                { p: "Quantos anagramas distintos possui a palavra 'RARA'?", o: ["24", "12", "6", "4"], r: 2 },
-                { p: "Calcule a quantidade de anagramas da palavra 'ARARA':", o: ["120", "10", "30", "24"], r: 1 }
+                { p: "Quantos anagramas possui a palavra simples 'MAPA' (considere a repetição da letra A)?", o: ["24 anagramas", "12 anagramas", "6 anagramas", "4 anagramas"], r: 1 },
+                { p: "Para calcular os anagramas de uma palavra com letras repetidas, dividimos o fatorial total pelo:", o: ["Fatorial do número de repetições", "Total de letras distintas", "Número de consoantes", "Dobro do número de vogais"], r: 0 },
+                { p: "Quantos anagramas distintos podem ser gerados a partir da palavra 'OVO'?", o: ["6 anagramas", "3 anagramas", "2 anagramas", "1 anagrama"], r: 1 },
+                { p: "Qual o total de anagramas associados à palavra 'BABA'?", o: ["24 anagramas", "6 anagramas", "4 anagramas", "12 anagramas"], r: 1 },
+                { p: "Quantos anagramas possui a palavra 'COCO'?", o: ["24 anagramas", "6 anagramas", "12 anagramas", "4 anagramas"], r: 1 },
+                { p: "A fórmula para permutações com elementos repetidos divide n! pelas repetições para evitar o quê?", o: ["Contar agrupamentos idênticos", "Gerar números ímpares", "Zerar o resultado", "Aumentar o valor do fatorial"], r: 0 },
+                { p: "Quantos anagramas existem para a palavra 'MAMÃ' (desconsidere o til estruturalmente)?", o: ["24 anagramas", "6 anagramas", "12 anagramas", "4 anagramas"], r: 1 },
+                { p: "Quantos caminhos em uma malha quadriculada podem ser feitos usando 2 passos para Direita e 2 para Cima?", o: ["24 caminhos", "6 caminhos", "4 caminhos", "12 caminhos"], r: 1 },
+                { p: "Quantos anagramas distintos possui a palavra 'RARA'?", o: ["24 anagramas", "6 anagramas", "12 anagramas", "8 anagramas"], r: 1 },
+                { p: "Calcule a quantidade de anagramas da palavra 'ARARA':", o: ["120 anagramas", "10 anagramas", "20 anagramas", "30 anagramas"], r: 1 }
             ],
             5: [
-                { p: "Em problemas de contagem, qual a principal diferença prática entre um Arranjo e uma Combinação?", o: ["No Arranjo a ordem importa; na Combinação a ordem não altera o grupo.", "Na Combinação a ordem importa.", "Combinação trabalha apenas com pares.", "Arranjo aceita elementos repetidos."], r: 0 },
-                { p: "Se precisamos criar uma senha bancária de 4 dígitos onde a ordem altera o acesso, lidamos com:", o: ["Combinação", "Arranjo", "Média Ponderada", "Matriz"], r: 1 },
+                { p: "Em problemas de contagem, qual a principal diferença prática entre um Arranjo e uma Combinação?", o: ["No Arranjo a ordem importa; na Combinação não", "Na Combinação a ordem importa; no Arranjo não", "Arranjo usa frações e Combinação usa raízes", "Nenhuma, são termos perfeitamente sinônimos"], r: 0 },
+                { p: "Se precisamos criar uma senha bancária de 4 dígitos onde a ordem altera o acesso, lidamos com:", o: ["Combinação Simples", "Arranjo Simples", "Permutação Circular", "Princípio da Adição"], r: 1 },
                 { p: "Qual o valor do Arranjo de 4 elementos tomados 2 a 2 (A4,2)?", o: ["6", "12", "24", "8"], r: 1 },
-                { p: "Calcule o número de arranjos possíveis de 5 elementos tomados 3 a 3 (A5,3):", o: ["15", "60", "10", "20"], r: 1 },
-                { p: "Se um pódio de uma corrida de 6 pessoas premiará 1º e 2º lugares, o total de pódios é calculado por:", o: ["Combinação Simples", "Arranjo Simples", "Fatorial Puro", "Permutação Circular"], r: 1 },
-                { p: "O cálculo de quantas maneiras 3 diretores diferentes podem ocupar as cadeiras de Presidente, Secretário e Tesoureiro exige:", o: ["Arranjo", "Combinação", "Soma simples", "Matriz"], r: 0 },
-                { p: "Dispomos de 5 cores e queremos pintar uma bandeira de 2 listras horizontais com cores distintas. Usamos:", o: ["Arranjo", "Combinação", "Média", "Potência"], r: 0 },
-                { p: "Qual o valor do Arranjo de 3 elementos tomados 2 a 2 (A3,2)?", o: ["3", "6", "9", "2"], r: 1 },
-                { p: "Se mudarmos a ordem dos elementos em um Arranjo, o que acontece com o agrupamento?", o: ["Permanece idêntico", "Torna-se um agrupamento totalmente diferente", "Zera o resultado", "Vira uma combinação"], r: 1 },
-                { p: "Calcule o Arranjo de 6 elementos tomados 2 a 2 (A6,2):", o: ["15", "30", "36", "12"], r: 1 }
+                { p: "Calcule o número de arranjos possíveis de 5 elementos tomados 3 a 3 (A5,3):", o: ["60 arranjos", "10 arranjos", "20 arranjos", "120 arranjos"], r: 0 },
+                { p: "Se um pódio de uma corrida de 6 pessoas premiará 1º e 2º lugares, o total de pódios é calculated por:", o: ["Combinação Simples C6,2", "Arranjo Simples A6,2", "Permutação Simples 6!", "Princípio Somatório"], r: 1 },
+                { p: "O cálculo de quantas maneiras 3 diretores diferentes podem ocupar as cadeiras de Presidente, Secretário e Tesoureiro exige:", o: ["Arranjo Simples", "Combinação Simples", "Permutação com Repetição", "Teorema de Pascal"], r: 0 },
+                { p: "Dispomos de 5 cores e queremos pintar uma bandeira de 2 listras horizontais com cores distintas. Usamos:", o: ["Arranjo Simples A5,2", "Combinação Simples C5,2", "Fatorial 5!", "Permutação 2!"], r: 0 },
+                { p: "Qual o valor do Arranjo de 3 elementos tomados 2 a 2 (A3,2)?", o: ["3", "6", "9", "1"], r: 1 },
+                { p: "Se mudarmos a ordem dos elementos em um Arranjo, o que acontece com o agrupamento?", o: ["Gera um novo agrupamento diferente", "Permanece exatamente idêntico", "Ocorre uma divisão por zero", "Anula a operação matemática"], r: 0 },
+                { p: "Calcule o Arranjo de 6 elementos tomados 2 a 2 (A6,2):", o: ["15", "30", "720", "12"], r: 1 }
             ],
             6: [
-                { p: "Uma empresa deseja escolher uma comissão de 2 diretores a partir de 5 candidatos. A ordem não importa. Quantas comissões?", o: ["20", "10", "25", "5"], r: 1 },
-                { p: "Para calcular agrupamentos onde a ordem dos elementos NÃO altera o resultado, usamos:", o: ["Arranjo", "Combinação Simples", "Permutação Circular", "Fatorial duplo"], r: 1 },
+                { p: "Uma empresa deseja escolher uma comissão de 2 diretores a partir de 5 candidatos. A ordem não importa. Quantas comissões?", o: ["20 comissões", "10 comissões", "5 comissões", "60 comissões"], r: 1 },
+                { p: "Para calcular agrupamentos onde a ordem dos elementos NÃO altera o resultado, usamos:", o: ["Arranjo Simples", "Combinação Simples", "Permutação Caótica", "Princípio Multiplicativo"], r: 1 },
                 { p: "Qual o valor numérico da Combinação de 4 elementos tomados 2 a 2 (C4,2)?", o: ["12", "6", "24", "4"], r: 1 },
-                { p: "De quantas maneiras podemos escolher uma dupla de alunos em uma sala com 6 estudantes?", o: ["30", "15", "36", "12"], r: 1 },
-                { p: "Calcule o valor da Combinação de 5 elementos escolhidos 3 a 3 (C5,3):", o: ["60", "10", "15", "20"], r: 1 },
-                { p: "Uma pizzaria oferece 5 ingredientes. Se o cliente pode escolher 2 ingredientes diferentes para a cobertura, quantas opções ele tem?", o: ["20", "10", "25", "15"], r: 1 },
-                { p: "Ao escolher 3 frutas distintas em uma fruteira que contém 4 opções para fazer um suco misto, quantas combinações existem?", o: ["4", "12", "24", "6"], r: 0 },
-                { p: "Se mudarmos a ordem dos elementos selecionados dentro de uma Combinação Simples, o grupo resultante:", o: ["Muda completamente", "Permanece exatamente o mesmo", "Fica inválido", "Duplica de valor"], r: 1 },
-                { p: "Quantos subconjuntos de exatamente 2 elementos possui um conjunto principal composto por 3 elementos?", o: ["6", "3", "9", "1"], r: 1 },
-                { p: "Calcule a Combinação de 6 elementos tomados 4 a 4 (C6,4):", o: ["30", "15", "20", "24"], r: 1 }
+                { p: "De quantas maneiras podemos escolher uma dupla de alunos em uma sala com 6 estudantes?", o: ["30 maneiras", "15 maneiras", "36 maneiras", "12 maneiras"], r: 1 },
+                { p: "Calcule o valor da Combinação de 5 elementos escolhidos 3 a 3 (C5,3):", o: ["10", "60", "20", "15"], r: 0 },
+                { p: "Uma pizzaria oferece 5 ingredientes. Se o cliente pode escolher 2 ingredientes diferentes para a cobertura, quantas opções ele tem?", o: ["20 opções", "10 opções", "25 opções", "5 opções"], r: 1 },
+                { p: "Ao escolher 3 frutas distintas em uma fruteira que contém 4 opções para fazer um suco misto, quantas combinações existem?", o: ["4 combinações", "12 combinações", "24 combinações", "6 combinações"], r: 0 },
+                { p: "Se mudarmos a ordem dos elementos selecionados dentro de uma Combinação Simples, o grupo resultante:", o: ["É considerado o mesmo grupo", "Gera um grupo totalmente inédito", "Torna-se inválido", "Multiplica-se por dois"], r: 0 },
+                { p: "Quantos subconjuntos de exatamente 2 elementos possui um conjunto principal composto por 3 elementos?", o: ["6 subconjuntos", "3 subconjuntos", "1 subconjunto", "9 subconjuntos"], r: 1 },
+                { p: "Calcule a Combinação de 6 elementos tomados 4 a 4 (C6,4):", o: ["30", "15", "360", "20"], r: 1 }
             ],
             7: [
-                { p: "Quantos anagramas possui a palavra 'PORTA'?", o: ["120", "24", "60", "720"], r: 0 },
-                { p: "De quantas maneiras distintas 5 pessoas podem se posicionar em uma fila indiana simples?", o: ["25", "120", "60", "50"], r: 1 },
-                { p: "Quantos anagramas possui a palavra 'LUA'?", o: ["3", "6", "9", "4"], r: 1 },
-                { p: "Se tivermos 3 livros diferentes, de quantas formas podemos organizá-los lado a lado em uma estante?", o: ["9", "6", "3", "12"], r: 1 },
-                { p: "A Permutação Simples de 'n' elementos distintos é equivalente a calcular matematicamente qual operação?", o: ["n * 2", "n!", "n^2", "n / 2"], r: 1 },
-                { p: "Quantos anagramas da palavra 'GATO' podem ser criados?", o: ["12", "24", "6", "16"], r: 1 },
-                { p: "De quantas maneiras 4 pessoas podem sentar-se em um banco de automóvel com 4 lugares vagos?", o: ["16", "24", "12", "8"], r: 1 },
-                { p: "Quantos anagramas possui a palavra 'BRUXA'?", o: ["24", "120", "60", "720"], r: 1 },
-                { p: "Quantas filas indianas diferentes podem ser formadas por apenas 2 pessoas?", o: ["1", "2", "4", "0"], r: 1 },
-                { p: "Quantos anagramas da palavra 'MEDO' começam com a letra M?", o: ["24", "6", "12", "4"], r: 1 }
+                { p: "Quantos anagramas possui a palavra 'PORTA'?", o: ["24 anagramas", "120 anagramas", "720 anagramas", "60 anagramas"], r: 1 },
+                { p: "De quantas maneiras distintas 5 pessoas podem se posicionar em uma fila indiana simples?", o: ["25 maneiras", "120 maneiras", "60 maneiras", "10 maneiras"], r: 1 },
+                { p: "Quantos anagramas possui a palavra 'LUA'?", o: ["3 anagramas", "6 anagramas", "9 anagramas", "1 anagrama"], r: 1 },
+                { p: "Se tivermos 3 livros diferentes, de quantas formas podemos organizá-los lado a lado em uma estante?", o: ["3 formas", "6 formas", "9 formas", "1 forma"], r: 1 },
+                { p: "A Permutação Simples de 'n' elementos distintos é equivalente a calcular matematicamente qual operação?", o: ["O quadrado de n (n²)", "O fatorial de n (n!)", "O dobro de n (2n)", "A raiz quadrada de n"], r: 1 },
+                { p: "Quantos anagramas da palavra 'GATO' podem ser criados?", o: ["12 anagramas", "24 anagramas", "16 anagramas", "8 anagramas"], r: 1 },
+                { p: "De quantas maneiras 4 pessoas podem sentar-se em um banco de automóvel com 4 lugares vagos?", o: ["16 maneiras", "24 maneiras", "8 maneiras", "12 maneiras"], r: 1 },
+                { p: "Quantos anagramas possui a palavra 'BRUXA'?", o: ["120 anagramas", "24 anagramas", "60 anagramas", "5 anagramas"], r: 0 },
+                { p: "Quantas filas indianas diferentes podem ser formadas por apenas 2 pessoas?", o: ["1 fila", "2 filas", "4 filas", "0 filas"], r: 1 },
+                { p: "Quantos anagramas da palavra 'MEDO' começam com a letra M?", o: ["24 anagramas", "6 anagramas", "4 anagramas", "12 anagramas"], r: 1 }
             ],
             8: [
-                { p: "Dispomos de 6 cores de tinta e queremos pintar uma bandeira de 3 listras verticais (cores distintas). Quantas formas?", o: ["18", "120", "216", "20"], r: 1 },
-                { p: "Quantos números ímpares de 3 algarismos distintos podemos formar com os algarismos 1, 2, 4, 6 e 8?", o: ["60", "12", "48", "24"], r: 1 },
-                { p: "Quantos números de 3 algarismos distintos podem ser criados utilizando exclusivamente os dígitos {1, 2, 3, 4}?", o: ["64", "24", "12", "48"], r: 1 },
-                { p: "Temos 4 camisas e 3 calças. Quantos conjuntos diferentes formados por 1 camisa e 1 calça podemos vestir?", o: ["7", "12", "60", "24"], r: 1 },
-                { p: "Quantos números pares de 2 algarismos distintos podemos formar usando os dígitos {1, 2, 3, 4}?", o: ["12", "6", "8", "16"], r: 1 },
-                { p: "Uma linha de trem possui 5 estações. Quantos tipos de bilhetes unilaterais (de uma estação para outra) devem ser impressos?", o: ["25", "20", "10", "15"], r: 1 },
-                { p: "Quantos números de 3 algarismos (com ou sem repetição) podemos formar usando apenas os dígitos 1 e 2?", o: ["6", "8", "9", "4"], r: 1 },
-                { p: "Para criar um código de 2 letras maiúsculas usando o alfabeto reduzido {A, B, C, D, E}, permitindo repetições, quantas opções há?", o: ["20", "25", "10", "30"], r: 1 },
-                { p: "Em uma lanchonete, um combo é composto por 1 sanduíche (entre 3 opções) e 1 bebida (entre 5 opções). Quantos combos existem?", o: ["8", "15", "25", "9"], r: 1 },
-                { p: "Quantos números de 2 algarismos distintos podem ser gerados a partir do conjunto de dígitos {5, 6, 7, 8, 9}?", o: ["25", "20", "10", "15"], r: 1 }
+                { p: "Dispomos de 6 cores de tinta e queremos pintar uma bandeira de 3 listras verticais (cores distintas). Quantas formas?", o: ["120 formas", "20 formas", "18 formas", "216 formas"], r: 0 },
+                { p: "Quantos números ímpares de 3 algarismos distintos podemos formar com os algarismos 1, 2, 4, 6 e 8?", o: ["60 números", "12 números", "24 números", "48 números"], r: 1 },
+                { p: "Quantos números de 3 algarismos distintos podem ser criados utilizando exclusivamente os dígitos {1, 2, 3, 4}?", o: ["64 números", "24 números", "12 números", "4 números"], r: 1 },
+                { p: "Temos 4 camisas e 3 calças. Quantos conjuntos diferentes formados por 1 camisa e 1 calça podemos vestir?", o: ["7 conjuntos", "12 conjuntos", "1 conjunto", "14 conjuntos"], r: 1 },
+                { p: "Quantos números pares de 2 algarismos distintos podemos formar usando os dígitos {1, 2, 3, 4}?", o: ["16 números", "6 números", "12 números", "8 números"], r: 1 },
+                { p: "Uma linha de trem possui 5 estações. Quantos tipos de bilhetes unilaterais (de uma estação para outra) devem ser impressos?", o: ["10 tipos", "20 tipos", "25 tipos", "5 tipos"], r: 1 },
+                { p: "Quantos números de 3 algarismos (com ou sem repetição) podemos formar usando apenas os dígitos 1 e 2?", o: ["6 números", "8 números", "9 números", "3 números"], r: 1 },
+                { p: "Para criar um código de 2 letras maiúsculas usando o alfabeto reduzido {A, B, C, D, E}, permitindo repetições, quantas opções há?", o: ["20 opções", "25 opções", "10 opções", "30 opções"], r: 1 },
+                { p: "Em uma lanchonete, um combo é composto por 1 sanduíche (entre 3 opções) e 1 bebida (entre 5 opções). Quantos combos existem?", o: ["8 combos", "15 combos", "25 combos", "9 combos"], r: 1 },
+                { p: "Quantos números de 2 algarismos distintos podem ser gerados a partir do conjunto de dígitos {5, 6, 7, 8, 9}?", o: ["25 números", "20 números", "10 números", "15 números"], r: 1 }
             ],
             9: [
-                { p: "Um técnico de vôlei possui 8 jogadores aptos. Quantos times diferentes de 6 jogadores ele pode escalar?", o: ["48", "28", "56", "14"], r: 1 },
-                { p: "Quantos anagramas começam com a letra 'R' na palavra 'ROMA'?", o: ["24", "6", "12", "4"], r: 1 },
-                { p: "Uma sala possui 7 lâmpadas independentes. De quantas maneiras podemos iluminar a sala acendendo exatamente 2 delas?", o: ["42", "21", "14", "49"], r: 1 },
-                { p: "De um grupo de 5 especialistas, quantos comitês de 3 membros sem cargos definidos podem ser formados?", o: ["60", "10", "15", "20"], r: 1 },
-                { p: "Quantos anagramas da palavra 'PATO' terminam com a letra O?", o: ["24", "6", "12", "4"], r: 1 },
-                { p: "Em um campeonato de xadrez com 6 jogadores, onde todos jogam contra todos uma única vez, quantas partidas ocorrerão?", o: ["36", "15", "30", "12"], r: 1 },
-                { p: "Um baralho simplificado tem 5 cartas distintas. Quantas duplas de cartas diferentes podem ser sorteadas?", o: ["20", "10", "25", "15"], r: 1 },
-                { p: "Quantas comissões de 4 pessoas podem ser escolhidas em um grupo composto por 5 voluntários?", o: ["20", "5", "10", "25"], r: 1 },
-                { p: "Quantos anagramas da palavra 'LÁPIS' começam com uma consoante?", o: ["120", "72", "48", "24"], r: 1 },
-                { p: "Dispomos de 6 pontos distintos marcados sobre uma circunferência. Quantos triângulos podem ser formados unindo esses pontos?", o: ["120", "20", "36", "15"], r: 1 }
+                { p: "Um técnico de vôlei possui 8 jogadores aptos. Quantos times diferentes de 6 jogadores ele pode escalar?", o: ["56 times", "28 times", "48 times", "14 times"], r: 1 },
+                { p: "Quantos anagramas começam com a letra 'R' na palavra 'ROMA'?", o: ["24 anagramas", "6 anagramas", "4 anagramas", "12 anagramas"], r: 1 },
+                { p: "Uma sala possui 7 lâmpadas independentes. De quantas maneiras podemos iluminar a sala acendendo exatamente 2 delas?", o: ["42 maneiras", "21 maneiras", "14 maneiras", "49 maneiras"], r: 1 },
+                { p: "De um grupo de 5 especialistas, quantos comitês de 3 membros sem cargos definidos podem ser formados?", o: ["60 comitês", "10 comitês", "20 comitês", "15 comitês"], r: 1 },
+                { p: "Quantos anagramas da palavra 'PATO' terminam com a letra O?", o: ["24 anagramas", "6 anagramas", "4 anagramas", "12 anagramas"], r: 1 },
+                { p: "Em um campeonato de xadrez com 6 jogadores, onde todos jogam contra todos uma única vez, quantas partidas ocorrerão?", o: ["30 partidas", "15 partidas", "36 partidas", "12 partidas"], r: 1 },
+                { p: "Um baralho simplificado tem 5 cartas distintas. Quantas duplas de cartas diferentes podem ser sorteadas?", o: ["20 duplas", "10 duplas", "25 duplas", "5 duplas"], r: 1 },
+                { p: "Quantas comissões de 4 pessoas podem ser escolhidas em um grupo composto por 5 voluntários?", o: ["20 comissões", "5 comissões", "10 comissões", "120 comissões"], r: 1 },
+                { p: "Quantos anagramas da palavra 'LÁPIS' começam com uma consoante?", o: ["120 anagramas", "72 anagramas", "48 anagramas", "24 anagramas"], r: 1 },
+                { p: "Dispomos de 6 pontos distintos marcados sobre uma circunferência. Quantos triângulos podem ser formados unindo esses pontos?", o: ["120 triângulos", "20 triângulos", "40 triângulos", "18 triângulos"], r: 1 }
             ],
             10: [
-                { p: "Em uma reunião há 10 pessoas. Se todas se cumprimentarem com um aperto de mãos, quantos ocorrerão?", o: ["100", "90", "45", "20"], r: 2 },
-                { p: "Se uma prova possui 10 questões do tipo Verdadeiro ou Falso, de quantas maneiras o gabarito pode ser preenchido?", o: ["20", "100", "512", "1024"], r: 3 },
-                { p: "De quantas maneiras 3 casais podem se sentar em uma fila de 6 assentos de modo que cada casal fique junto?", o: ["720", "48", "8", "24"], r: 1 },
-                { p: "Quantos divisores inteiros e positivos possui o número composto 60?", o: ["6", "12", "10", "8"], r: 1 },
-                { p: "Em uma circunferência são marcados 5 pontos distintos. Quantas cordas ligando dois desses pontos podem ser desenhadas?", o: ["20", "10", "25", "5"], r: 1 },
-                { p: "Se dispomos de 4 livros de Matemática e 3 de Física, de quantas formas podemos organizá-los mantendo os da mesma matéria juntos?", o: ["144", "288", "12", "24"], r: 1 },
-                { p: "Quantos números de 4 algarismos distintos podemos formar usando os algarismos do sistema decimal {1, 2, 3, 4, 5, 6}?", o: ["1296", "360", "24", "720"], r: 1 },
-                { p: "De quantas maneiras podemos distribuir 3 prêmios diferentes para 3 pessoas distintas (uma pessoa pode ganhar mais de um)?", o: ["9", "27", "6", "3"], r: 1 },
-                { p: "Quantos caminhos existem para ir de um ponto A a um ponto B em um bloco tridimensional dando 3 passos em X, 2 em Y e 1 em Z?", o: ["60", "720", "6", "120"], r: 0 },
-                { p: "Em uma bandeja há 5 doces e 5 salgados distintos. De quantas maneiras posso escolher 2 doces e 2 salgados?", o: ["100", "50", "25", "20"], r: 0 }
+                { p: "Em uma reunião há 10 pessoas. Se todas se cumprimentarem com um aperto de mãos, quantos ocorrerão?", o: ["90 apertos", "45 apertos", "100 apertos", "20 apertos"], r: 1 },
+                { p: "Se uma prova possui 10 questões do tipo Verdadeiro ou Falso, de quantas maneiras o gabarito pode ser preenchido?", o: ["20 maneiras", "1024 maneiras", "100 maneiras", "512 maneiras"], r: 1 },
+                { p: "De quantas maneiras 3 casais podem se sentar em uma fila de 6 assentos de modo que cada casal fique junto?", o: ["48 maneiras", "8 maneiras", "24 maneiras", "12 maneiras"], r: 0 },
+                { p: "Quantos divisores inteiros e positivos possui o número composto 60?", o: ["10 divisores", "12 divisores", "8 divisores", "15 divisores"], r: 1 },
+                { p: "Em uma circunferência são marcados 5 pontos distintos. Quantas cordas ligando dois desses pontos podem ser desenhadas?", o: ["20 cordas", "10 cordas", "25 cordas", "5 cordas"], r: 1 },
+                { p: "Se dispomos de 4 livros de Matemática e 3 de Física, de quantas formas podemos organizá-los mantendo os da mesma matéria juntos?", o: ["288 formas", "144 formas", "12 formas", "24 formas"], r: 0 },
+                { p: "Quantos números de 4 algarismos distintos podemos formar usando os algarismos do sistema decimal {1, 2, 3, 4, 5, 6}?", o: ["1296 números", "360 números", "720 números", "24 números"], r: 1 },
+                { p: "De quantas maneiras podemos distribuir 3 prêmios diferentes para 3 pessoas distintas (uma pessoa pode ganhar mais de um)?", o: ["6 maneiras", "27 maneiras", "9 maneiras", "3 maneiras"], r: 1 },
+                { p: "Quantos caminhos existem para ir de um ponto A a um ponto B em um bloco tridimensional dando 3 passos em X, 2 em Y e 1 em Z?", o: ["720 caminhos", "60 caminhos", "6 caminhos", "120 caminhos"], r: 1 },
+                { p: "Em uma bandeja há 5 doces e 5 salgados distintos. De quantas maneiras posso escolher 2 doces e 2 salgados?", o: ["100 maneiras", "10 maneiras", "25 maneiras", "50 maneiras"], r: 0 }
             ]
         };
 
@@ -468,13 +483,18 @@
             10: { primary: "#FFFFFF", bg: "#151515", bgBox: "rgba(0,0,0,1)", border: "solid", scaleCr: "1.80" }
         };
 
+        const titulosFases = {
+            1: "LABORATÓRIO ABANDONADO", 2: "CORREDOR DA AGONIA", 3: "SALA DOS SUSSURROS", 4: "PORÃO TORTUOSO",
+            5: "SALA DE MÁQUINAS", 6: "FOSSO DAS ALMAS", 7: "SANTUÁRIO PROFANO", 8: "SALA DOS ESPELHOS",
+            9: "CÂMARA DE TORTURA", 10: "NÚCLEO DO SISTEMA"
+        };
+
         let level = 1;
         let lives = 3; 
         let currentQuestion = null;
         let audioCtx = null;
         let historicoQuestoes = {}; 
 
-        // Sorteio inteligente e proteção contra repetição imediata
         function inicializarHistorico() {
             for (let sala in bancoConceitual) {
                 historicoQuestoes[sala] = [...bancoConceitual[sala]];
@@ -488,6 +508,8 @@
             document.documentElement.style.setProperty('--bg-dark', config.bg);
             document.documentElement.style.setProperty('--container-bg', config.bgBox);
             document.documentElement.style.setProperty('--border-style', config.border);
+
+            document.getElementById('theme-title').innerText = titulosFases[fase] || "SALA DESCONHECIDA";
 
             const scale = config.scaleCr;
             document.getElementById('creature-left').style.transform = `scale(${scale})`;
@@ -513,7 +535,6 @@
         }
 
         function loadQuestion() {
-            // Se as questões da sala atual acabarem na rodada corrente, recarrega o sub-banco da fase
             if (!historicoQuestoes[level] || historicoQuestoes[level].length === 0) {
                 historicoQuestoes[level] = [...bancoConceitual[level]];
             }
@@ -521,7 +542,6 @@
             const list = historicoQuestoes[level];
             const randomIndex = Math.floor(Math.random() * list.length);
             
-            // O .splice(index, 1)[0] retira a questão do deck atual de sorteio para nunca repetir consecutivamente
             currentQuestion = list.splice(randomIndex, 1)[0]; 
             
             document.getElementById('level-display').innerText = `SALA: ${level} / 10`;
@@ -560,8 +580,8 @@
                 if (lives <= 0) {
                     gameOver();
                 } else {
-                    alert("Cálculo errado! As criaturas mudaram o enigma da sala.");
-                    loadQuestion(); // Sorteia uma nova questão inédita dentro do deck da mesma sala
+                    alert("A resposta está incorreta. O sistema de segurança te puniu e mudou o enigma desta sala.");
+                    loadQuestion(); 
                 }
             }
         }
@@ -580,18 +600,18 @@
             setTimeout(() => {
                 const overlay = document.getElementById('overlay');
                 overlay.style.display = 'flex';
-                document.getElementById('status-title').innerText = "DEVORADO";
+                document.getElementById('status-title').innerText = "SUA MENTE RUIU";
                 document.getElementById('status-title').style.color = "#FF0000";
-                document.getElementById('status-msg').innerText = "As criaturas tomaram a sala. As chances escorreram pelas paredes.";
+                document.getElementById('status-msg').innerText = "Suas chances acabaram. O labirinto absorveu sua consciência para sempre.";
             }, 800);
         }
 
         function win() {
             const overlay = document.getElementById('overlay');
             overlay.style.display = 'flex';
-            document.getElementById('status-title').innerText = "SOBREVIVENTE";
+            document.getElementById('status-title').innerText = "LIBERDADE CONQUISTADA";
             document.getElementById('status-title').style.color = "#00FF00";
-            document.getElementById('status-msg').innerText = "As criaturas recuaram! Você decifrou a Análise Combinatória perfeitamente!";
+            document.getElementById('status-msg').innerText = "Você decifrou todas as camadas de criptografia lógica e as portas do labirinto se abriram!";
         }
 
         function resetGame() {
